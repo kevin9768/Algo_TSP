@@ -7,7 +7,7 @@
 using namespace std;
 
 //return (row,col), cost
-pair<pair<int,int>,int> select_arc(vector<vector<int>> weight){
+pair<pair<int,int>,int> select_arc(vector<vector<int> > weight){
     
     int row,col;
     int max_cost = INT32_MIN;
@@ -40,7 +40,7 @@ bool cmp(pair<int,int> a, pair<int,int> b){
     return a.first<b.first;
 }
 
-vector<int> arc_to_array(vector<pair<int,int>> &edges, vector<vector<int>> &weight){
+vector<int> arc_to_array(vector<pair<int,int> > &edges, vector<vector<int> > &weight){
     sort(edges.begin(), edges.end(), cmp);
     vector<int> res;
 
@@ -70,7 +70,7 @@ int main(int argc, char** argv){
     int n;
     input>>n;
 
-    vector<vector<int>> weight(n, vector<int>(n, 0));
+    vector<vector<int> > weight(n, vector<int>(n, 0));
     for(auto &i: weight)
         for(auto &j : i){
             input>>j;
@@ -80,9 +80,9 @@ int main(int argc, char** argv){
     //BB
     start = clock();
     //reduction
-    vector<vector<int>> reducted = weight;
+    vector<vector<int> > reducted = weight;
     int opt_lo_bound = 0;
-    vector<pair<int,int>> edges;
+    vector<pair<int,int> > edges;
     
     for(int a=0; a<n; a++){
         //by row
