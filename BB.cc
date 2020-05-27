@@ -103,6 +103,7 @@ int reduction(vector<vector<int> > &weight){
 }
 
 bool feasible(vector<pair<int, int> > edges){
+    if(edges.size()==0 || edges.size()==1) return true;
     vector<int> res;
 
     sort(edges.begin(), edges.end(), cmp);
@@ -139,16 +140,18 @@ bool feasible(vector<pair<int, int> > edges){
     return true;
 }
 
-vector<pair<int,int> > BB_recur(vector<vector<int> > l_weight, int lo, int level){
+vector<pair<int,int> > BB_recur(vector<pair<int, int> > taken, vector<vector<int> > l_weight, int lo, int level){
     vector<pair<int,int> > res, res_l, res_r;
 
     pair<pair<int,int>,int> arc = select_arc(l_weight);
     
 
-    cout<<"Arc: "<<arc.first.first<<", "<<arc.first.second<<'\n';
+    cout<<"Arc: "<<arc.first.first<<", "<<arc.first.second<<" Cost: "<<arc.second<<'\n';
     if(level==l_weight.size()-1){
-        BB_UB = min(lo, BB_UB);
-        res.push_back(arc.first);
+        //if(arc.second>0){
+            BB_UB = min(lo, BB_UB);
+            res.push_back(arc.first);
+        //}
         return res;
     }
     if(arc.second<0)    return res;
@@ -157,34 +160,41 @@ vector<pair<int,int> > BB_recur(vector<vector<int> > l_weight, int lo, int level
 
     long long tmpUB = BB_UB;
     //l_sub
-    l_weight[arc.first.second][arc.first.first] = -1;
-    for(int i=0; i<l_weight.size(); i++){
-        l_weight[arc.first.first][i] = -1;
-        l_weight[i][arc.first.second] = -1;
-    }
-    int l_lo = lo + reduction(l_weight);
-    cout<<"L: Arc: "<<arc.first.first<<", "<<arc.first.second<<'\n';
-    cout<<"L: bound: "<<l_lo<<'\n';
-    res_l = BB_recur(l_weight, l_lo, level+1);
-    if(!feasible(res_l)){
-        BB_UB = tmpUB;
-        res_l.clear();
+    taken.push_back(arc.first);
+    if(feasible(taken) || taken.size()==1){
+        l_weight[arc.first.second][arc.first.first] = -1;
+        for(int i=0; i<l_weight.size(); i++){
+            l_weight[arc.first.first][i] = -1;
+            l_weight[i][arc.first.second] = -1;
+        }
+        int l_lo = lo + reduction(l_weight);
+        cout<<"L: Arc: "<<arc.first.first<<", "<<arc.first.second<<'\n';
+        cout<<"L: bound: "<<l_lo<<'\n';
+        if(l_lo>0)
+            res_l = BB_recur(taken, l_weight, l_lo, level+1);
+        if(!feasible(res_l)){
+            BB_UB = tmpUB;
+            res_l.clear();
+        }
     }
 
+    
     //r_sub
+    taken.pop_back();
     if(level<l_weight.size()-1){
         cout<<"Arc: "<<arc.first.first<<", "<<arc.first.second<<'\n';
         r_weight[arc.first.first][arc.first.second] = -1;
         int r_lo = lo + arc.second;
         cout<<"R: Arc: "<<arc.first.first<<", "<<arc.first.second<<'\n';
         cout<<"R: bound: "<<r_lo<<'\n';
-        res_r = BB_recur(r_weight, r_lo, level);
+        if(r_lo>0)
+            res_r = BB_recur(taken, r_weight, r_lo, level);
     }
 
     int req_size = l_weight.size() - level - 1;
     cout<<"level: "<<level<<'\n';
     cout<<"arc: "<<arc.first.first<<" "<<arc.first.second<<'\n';
-    cout<<"l size: "<<res_l.size()<<" r_size: "<<res_r.size()<<'\n';
+    cout<<"req_size: "<<req_size<<" l_size: "<<res_l.size()<<" r_size: "<<res_r.size()<<'\n';
     if(req_size == res_l.size())
         res = res_l;
     else if(req_size == res_r.size())
@@ -204,8 +214,10 @@ vector<pair<int,int> > BB_recur(vector<vector<int> > l_weight, int lo, int level
 
 vector<pair<int, int> > solve_BB(vector<vector<int> > weight){
     int low_bound = reduction(weight);
+    vector<pair<int, int> > taken;
 
-    return BB_recur(weight, low_bound, 0);
+
+    return BB_recur(taken, weight, low_bound, 0);
 
 }
 

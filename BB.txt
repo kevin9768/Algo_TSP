@@ -1,3 +1,3 @@
-Path: 1->4->6->7->3->5->2->1
-Cost: 126
-Execution Time: 0.000503 sec
+Path: 0->5->4->3->1->2->0
+Cost: 116
+Execution Time: 0.000318 sec

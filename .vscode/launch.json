@@ -6,15 +6,15 @@
     "configurations": [
         {
             "name": "clang++ - Build and debug active file",
-            "type": "cppdbg",
+            "type": "lldb",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
-            "args": [ "./data/n_7/case_1.txt", "./data/n_7/BB_1.txt"],
-            "stopAtEntry": false,
+            "args": ["${workspaceFolder}/data/n_7/case_1.txt", "${workspaceFolder}/data/n_7/BB1_1.txt"],
+            //"stopAtEntry": true,
             "cwd": "${workspaceFolder}",
-            "environment": [],
-            "externalConsole": false,
-            "MIMode": "lldb",
+            //"environment": [],
+            //"externalConsole": false,
+            //"MIMode": "lldb",
             "preLaunchTask": "clang++ build active file"
         }
     ]
