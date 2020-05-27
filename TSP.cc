@@ -276,10 +276,10 @@ void BruteForce(vector<vector<int> > weight, ofstream &BF){
     }while(next_permutation(vertex.begin()+1, vertex.end()));
     end = clock();
 
-    BF<<"Path: "<<min_path[0]+1;
+    BF<<"Path: "<<min_path[0];
     for(int i=1; i<n; i++)
-        BF<<"->"<<min_path[i]+1;
-    BF<<"->"<<min_path[0]+1<<'\n';
+        BF<<"->"<<min_path[i];
+    BF<<"->"<<min_path[0]<<'\n';
     BF<<"Cost: "<<min<<'\n';
     BF<<"Execution Time: "<<(double)(end - start)/CLOCKS_PER_SEC<<" sec\n";
 }
@@ -287,11 +287,12 @@ void BruteForce(vector<vector<int> > weight, ofstream &BF){
 int main(int argc, char** argv){
     ifstream input;
     ofstream BF, BB;
-    //input.open("input.txt");
-    //BF.open("BF.txt");
-    input.open(argv[1]);
+    input.open("input.txt");
+    BF.open("BF.txt");
+    BB.open("BB.txt");
+    //input.open(argv[1]);
     //BF.open(argv[2]);
-    BB.open(argv[2]);
+    //BB.open(argv[2]);
 
     int n;
     input>>n;
@@ -303,7 +304,7 @@ int main(int argc, char** argv){
 
 
     //Brute Force
-    //BruteForce(weight, BF);
+    BruteForce(weight, BF);
 
     //Branch and Bound
     BranchNBound(weight, BB);
